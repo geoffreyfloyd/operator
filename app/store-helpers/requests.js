@@ -28,37 +28,36 @@ var api = {
     }
 };
 
+var wrapRequest = function (cmd) {
+    return {
+        id: uuid.v4(),
+        date: (new Date()).toISOString(),
+        cmd: cmd,
+        response: null
+    };
+}
+
 var f = {
-    start: function () {
-        return {
-            id: uuid.v4(),
-            cmd: '',
-            date: null,
-            listening: true,
-            response: null
-        };
-    },
-    send: function (request, callback) {
-        var req;
-        for (var i = 0; i < requests.length; i++) {
-            if (requests[i].id === request.id) {
-                req = requests[i];
-            }
+    send: function (cmd, callback) {
+
+        if (!cmd) {
+            return;
         }
 
-        req.cmd = request.cmd;
-        req.date = new Date();
-        req.listening = false;
-
-        var newRequest = f.start();
-        requests.push(newRequest);
+        var request = wrapRequest(cmd);
+        requests.push(request);
 
         // notify subscribers
-        callbacks.map(function (cb) {
-            cb([req, newRequest]);
-        });
+        f.notify(request);
 
-        api.sendRequest(req, callback);
+        api.sendRequest(request, function (request) {
+            // notify subscribers
+            f.notify(request);
+
+            if (callback) {
+                callback(request);
+            }
+        });
     },
     repeat: function (id) {
         var i;
@@ -72,40 +71,36 @@ var f = {
             }
         }
 
-        var currentRequest = requests[requests.length - 1];
-
-        Object.assign(currentRequest, {
-            cmd: repeatRequest.cmd,
-            listening: false
-        });
-
-        // notify subscribers
-        callbacks.map(function (cb) {
-            cb([currentRequest]);
-        });
-
-        f.send(currentRequest, function () {
+        f.send(repeatRequest.cmd, function (request) {
             // notify subscribers
-            callbacks.map(function (cb) {
-                cb([currentRequest]);
-            });
-        });
+            f.notify(request);
+        })
     },
     get: function () {
         return requests;
     },
-    subscribe: function (callback) {
-        callbacks.push(callback);
+    subscribe: function (callback, id) {
+        callbacks.push({
+            callback: callback,
+            id: id
+        });
+    },
+    notify: function (request) {
+        // notify subscribers
+        callbacks.map(function (cb) {
+            if (!cb.id || request.id === cb.id) {
+                cb.callback(request);
+            }
+        });
     }
 };
 
 module.exports = exports = f;
-var welcome = f.start();
-welcome.listening = false;
+var welcome = wrapRequest('');
 welcome.response = {
     status: 'OK',
     date: new Date(),
     result: 'WebPrompt\r\nHoomanLogic ©2015',
     type: 'text'
 };
-var requests = [welcome, f.start()];
+var requests = [welcome];

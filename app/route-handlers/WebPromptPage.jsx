@@ -1,3 +1,3 @@
-import WebPrompt from "components/WebPrompt";
+import WebPromptPage from "containers/WebPromptPage";
 
-export default WebPrompt;
+export default WebPromptPage;

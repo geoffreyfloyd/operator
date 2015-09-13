@@ -1,5 +1,4 @@
 import React from "react";
-import WebPrompt from "components/WebPrompt";
 import styles from "./Application.less";
 import { RouteHandler } from "react-router";
 

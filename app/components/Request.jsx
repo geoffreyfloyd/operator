@@ -1,6 +1,5 @@
 import React from 'react';
 import Requests from "../store-helpers/requests";
-import Microphone from './Microphone';
 import styles from "./Request.less";
 import $ from 'jquery/dist/jquery';
 
@@ -12,57 +11,27 @@ module.exports = exports = React.createClass({
         return this.props.data;
      },
 
-     componentDidMount: function() {
-         if (this.props.data.listening) {
-             $(this.refs.cmd.getDOMNode()).focus();
-             document.addEventListener('keydown', this.handleKeyDown);
-         }
-     },
-
-     componentWillUnMount: function() {
-         document.removeEventListener('keydown', this.handleKeyDown);
-     },
-
-     componentWillUpdate: function () {
-         if (!this.props.data.listening) {
-             document.removeEventListener('keydown', this.handleKeyDown);
-         }
+     componentDidMount: function () {
+        Requests.subscribe(this.handleStoreUpdate, this.props.data.id);
      },
 
     /*************************************************************
      * EVENT HANDLING
      *************************************************************/
     handleRequestClick: function () {
-        Requests.repeat(this.state.id);
+        var data = this.props.data;
+        Requests.repeat(data.id);
     },
     handleResponseClick: function () {
-        if (this.state.response) {
-            console.log(this.state.response.result);
+        var data = this.props.data;
+        if (data.response) {
+            console.log(data.response.result);
         }
     },
-    handleInputChange: function (e) {
+    handleStoreUpdate: function () {
         this.setState({
-            cmd: e.target.value
+            ts: (new Date()).toISOString()
         });
-    },
-    handleKeyDown: function(e) {
-        var keyEnter = 13;
-        if (e.keyCode == keyEnter) {
-            this.handleSendRequest();
-        }
-    },
-    handleSendRequest: function (cmd) {
-
-        var request = this.state;
-        request.listening = false;
-        if (typeof cmd === 'string') {
-            request.cmd = cmd;
-        }
-        Requests.send(request, this.handleResponseReady);
-        this.setState(request);
-    },
-    handleResponseReady: function (request) {
-        this.setState(request);
     },
     handleRequestHoverChange: function (hovering) {
         this.setState({
@@ -73,11 +42,12 @@ module.exports = exports = React.createClass({
     * RENDERING
     *************************************************************/
     renderTextResponse: function () {
-        if (!this.state.response.result) {
+        var data = this.props.data;
+        if (!data.response.result) {
             return null;
         }
         var response = [];
-        var lines = this.state.response.result.split('\r\n');
+        var lines = data.response.result.split('\r\n');
         lines.map(function (line) {
             response.push(<span>{line}</span>);
             response.push(<br />);
@@ -85,18 +55,20 @@ module.exports = exports = React.createClass({
         return response;
     },
     renderHtmlResponse: function () {
-        if (!this.state.response.result) {
+        var data = this.props.data;
+        if (!data.response.result) {
             return null;
         }
-        var html = this.state.response.result;
+        var html = data.response.result;
 
         return <span dangerouslySetInnerHTML={{__html: html}}></span>;
     },
     renderJsonResponse: function () {
-        if (!this.state.response.result) {
+        var data = this.props.data;
+        if (!data.response.result) {
             return null;
         }
-        var obj = JSON.parse(this.state.response.result);
+        var obj = JSON.parse(data.response.result);
         var display = obj.mobileview.sections[0].text;
 
         // for (var prop in obj.query.pages) {
@@ -124,34 +96,25 @@ module.exports = exports = React.createClass({
         var cmd;
         var response;
 
-        if (this.state.listening) {
-            cmd = (
-                <div className={styles.inputcontainer}>
-                    <input ref="cmd" id="cmd" type="text" className={styles.input} onChange={this.handleInputChange} value={this.state.cmd} />
-                    <Microphone style={{ width: '32px', float: 'right' }} handleSpeechResult={this.handleSendRequest} />
-                </div>
-            );
-        }
-        else {
-            /**
-             * Response media
-             */
-            if (this.state.response) {
-                if (this.state.response.type === 'text') {
-                    response = this.renderTextResponse();
-                } else if (this.state.response.type === 'json') {
-                    response = this.renderJsonResponse();
-                } else if (this.state.response.type === 'html') {
-                    response = this.renderHtmlResponse();
-                }
-            }
-            response = <div className={styles.response}>{response}</div>;
 
-            cmd = [];
-            if (this.state.cmd) {
-                cmd.push(<span ref="cmd" className={statusStyle} onClick={this.handleRequestClick}>{this.state.cmd}</span>);
-                cmd.push(<br />);
+        /**
+         * Response media
+         */
+        if (data.response) {
+            if (data.response.type === 'text') {
+                response = this.renderTextResponse();
+            } else if (data.response.type === 'json') {
+                response = this.renderJsonResponse();
+            } else if (data.response.type === 'html') {
+                response = this.renderHtmlResponse();
             }
+        }
+        response = <div className={styles.response}>{response}</div>;
+
+        cmd = [];
+        if (data.cmd) {
+            cmd.push(<span ref="cmd" className={statusStyle} onClick={this.handleRequestClick}>{this.state.cmd}</span>);
+            cmd.push(<br />);
         }
 
         return (
