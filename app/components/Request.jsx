@@ -2,6 +2,7 @@ import React from 'react';
 import Requests from "../store-helpers/requests";
 import styles from "./Request.less";
 import $ from 'jquery/dist/jquery';
+import GooeyHost from '../gooeys/GooeyHost';
 
 var Request = React.createClass({
     /*************************************************************
@@ -16,8 +17,10 @@ var Request = React.createClass({
      },
 
      componentWillUpdate: function() {
-         var node = this.refs.responseContainer.getDOMNode();
-         this.shouldScrollBottom = node.scrollTop + node.offsetHeight === node.scrollHeight;
+         if (this.refs.responseContainer) {
+             var node = this.refs.responseContainer.getDOMNode();
+             this.shouldScrollBottom = node.scrollTop + node.offsetHeight === node.scrollHeight;
+         }
      },
 
      componentDidUpdate: function() {
@@ -91,6 +94,13 @@ var Request = React.createClass({
         // }
         return <span dangerouslySetInnerHTML={{__html: display}}></span>;
     },
+    renderGooeyResponse: function () {
+        var data = this.props.data;
+        if (!data.response.result) {
+            return null;
+        }
+        return <GooeyHost gooey={data.response.result} />
+    },
     render: function () {
         var data = this.props.data;
 
@@ -125,6 +135,8 @@ var Request = React.createClass({
                 response = this.renderJsonResponse();
             } else if (data.response.type === 'html') {
                 response = this.renderHtmlResponse();
+            } else if (data.response.type === 'gooey') {
+                response = this.renderGooeyResponse();
             }
         }
         response = <div ref="responseContainer" className={styles.response + ' ' + styles.scroll}>{response}</div>;

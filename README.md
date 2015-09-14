@@ -8,9 +8,12 @@ An experimental project to re-imagine the command prompt in a connected and medi
 * hello
 * remind
 * count
+* calc
+* pong
 
 ## In The Works
 
+* json - manage and view simple json arrays and objects
 * triggers - run a command when trigger evaluates to true (ie. sendemail when new craigslist item is available or when amazon price decreases)
 * social - post quick updates to your facebook and twitter accounts
 * gui processes - self-contained React apps hosted in browser
