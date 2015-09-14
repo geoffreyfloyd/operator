@@ -121,7 +121,7 @@ var WebPromptPage = React.createClass({
                 </Toolbar>
                 <div style={{display: 'flex'}}>
                     <div className={styles.scroll} key="mainworkspace" style={{ flexGrow: '1', margin: '0 10px', maxWidth: String(size.workspaceWidth) + 'px', height: size.workspaceHeight + 'px', overflowY: 'auto' }} >
-                        <Session sessionId={selectedSessionId} selected={true} />
+                        <Session sessionId={selectedSessionId} selected />
                     </div>
 
                     {sideSessions}
@@ -136,7 +136,7 @@ var WebPromptPage = React.createClass({
                     <Prompt sessionId={sessionId} />
                 </Toolbar>
                 <div className={styles.scroll} key="mainworkspace" style={{ margin: '0 10px 10px', height: size.workspaceHeight + 'px', overflowY: 'auto'}}>
-                    <Session sessionId={sessionId} selected={true} />
+                    <Session sessionId={sessionId} selected />
                 </div>
             </div>
         );

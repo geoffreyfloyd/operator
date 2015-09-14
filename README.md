@@ -13,6 +13,8 @@ An experimental project to re-imagine the command prompt in a connected and medi
 
 ## In The Works
 
+* localstorage of sessions and requests
+* sticky websocket sessions (find connection by user identifier or cookie) so if a user reconnects as a new user they still receive the message
 * json - manage and view simple json arrays and objects
 * triggers - run a command when trigger evaluates to true (ie. sendemail when new craigslist item is available or when amazon price decreases)
 * social - post quick updates to your facebook and twitter accounts

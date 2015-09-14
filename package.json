@@ -8,6 +8,7 @@
     "dev-server": "webpack-dev-server --config webpack-dev-server.config.js --progress --colors --port 2992 --inline",
     "hot-dev-server": "webpack-dev-server --config webpack-hot-dev-server.config.js --hot --progress --colors --port 2992 --inline",
     "build": "webpack --config webpack-production.config.js --progress --profile --colors",
+    "build-nwjs": "webpack --config webpack-node-webkit.config.js --progress --profile --colors",
     "start-dev": "node lib/server-development",
     "start": "node lib/server-production"
   },
@@ -35,6 +36,7 @@
     "html-loader": "^0.3.0",
     "items-store": "^0.7.0",
     "jquery": "^2.1.4",
+    "json-loader": "^0.5.2",
     "less": "^2.1.2",
     "less-loader": "^2.0.0",
     "markdown-loader": "^0.1.2",
