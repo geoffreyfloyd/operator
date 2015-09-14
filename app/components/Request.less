@@ -13,6 +13,10 @@
     color: @clrComment;
 }
 
+.inprocess {
+    color: @clrComment;
+}
+
 .ok {
     color: @clrDefault;
 }
@@ -20,6 +24,13 @@
 .err {
     color: @clrError;
     text-decoration: line-through;
+}
+
+
+.inprocess:hover {
+    font-size: 1.2em;
+    line-height: 0.8em;
+    cursor: pointer;
 }
 
 .waiting:hover {
@@ -41,5 +52,8 @@
 }
 
 .response {
-    text-align: right;
+    margin-left: 30px;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
 }

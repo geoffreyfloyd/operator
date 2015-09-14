@@ -15,6 +15,18 @@ module.exports = exports = React.createClass({
         Requests.subscribe(this.handleStoreUpdate, this.props.data.id);
      },
 
+     componentWillUpdate: function() {
+         var node = this.refs.responseContainer.getDOMNode();
+         this.shouldScrollBottom = node.scrollTop + node.offsetHeight === node.scrollHeight;
+     },
+
+     componentDidUpdate: function() {
+         if (this.shouldScrollBottom) {
+             var node = this.refs.responseContainer.getDOMNode();
+             node.scrollTop = node.scrollHeight
+         }
+     },
+
     /*************************************************************
      * EVENT HANDLING
      *************************************************************/
@@ -87,7 +99,13 @@ module.exports = exports = React.createClass({
          */
         var statusStyle = styles.waiting;
         if (data.response && data.response.status === 'OK') {
-            statusStyle = styles.ok;
+            if (data.context.processId) {
+                // in a process - still expecting more responses
+                statusStyle = styles.inprocess;
+            }
+            else {
+                statusStyle = styles.ok;
+            }
         }
         else if (data.response && data.response.status === 'ERR') {
             statusStyle = styles.err;
@@ -109,7 +127,7 @@ module.exports = exports = React.createClass({
                 response = this.renderHtmlResponse();
             }
         }
-        response = <div className={styles.response}>{response}</div>;
+        response = <div ref="responseContainer" className={styles.response + ' ' + styles.scroll}>{response}</div>;
 
         cmd = [];
         if (data.cmd) {

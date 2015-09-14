@@ -1,7 +1,7 @@
 'use strict';
 
 import React from "react";
-import Requests from "../store-helpers/requests";
+import requestStore from "../store-helpers/requests";
 import Microphone from './Microphone';
 import styles from "./Prompt.less";
 
@@ -42,7 +42,7 @@ module.exports = exports = React.createClass({
         request = request || this.state.request;
 
         // send request
-        Requests.send(request, this.handleResponseReady);
+        requestStore.send(request, this.props.sessionId, this.handleResponseReady);
 
         // clear input
         this.setState({
@@ -54,11 +54,10 @@ module.exports = exports = React.createClass({
     * RENDERING
     *************************************************************/
     render: function () {
-
-        var requests = Requests.get();
-
+        //TODO: Tab suggest autocompletion and up / down request history
         return (
             <div className={styles.inputcontainer}>
+                <i className="fa fa-2x fa-chevron-right"></i>
                 <input ref="cmd" id="cmd" type="text" className={styles.input} onChange={this.handleInputChange} value={this.state.request} />
                 <Microphone handleSpeechResult={this.handleSendRequest} />
             </div>
