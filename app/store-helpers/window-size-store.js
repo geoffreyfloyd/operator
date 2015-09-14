@@ -27,6 +27,8 @@
         this.onLastOut = function () {
             window.removeEventListener('resize', onWindowResize);
         };
+        
+        onWindowResize();
     };
     WindowSizeStore.prototype = Object.create(store.Store.prototype);
     WindowSizeStore.prototype.constructor = WindowSizeStore;

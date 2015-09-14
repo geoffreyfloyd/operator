@@ -3,7 +3,7 @@
 import React from "react";
 import styles from './Toolbar.less';
 
-module.exports = exports = React.createClass({
+var Toolbar = React.createClass({
     render: function () {
         return (
             <div className={styles.container}>
@@ -16,3 +16,5 @@ module.exports = exports = React.createClass({
         );
     }
 });
+
+module.exports = Toolbar;

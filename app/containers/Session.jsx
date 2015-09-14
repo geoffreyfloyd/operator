@@ -5,19 +5,19 @@ import requestStore from "../store-helpers/requests";
 import Request from "../components/Request";
 import styles from "./Session.less";
 
-module.exports = exports = React.createClass({
+var Session = React.createClass({
     /*************************************************************
      * COMPONENT LIFECYCLE
      *************************************************************/
     getInitialState: function () {
         return {
-            title: 'WebPrompt',
+            title: null,
             ts: (new Date()).toISOString(),
             collapsed: false
         };
     },
 
-    componentWillMount: function () {
+    componentDidMount: function () {
         requestStore.subscribe(this.handleStoreUpdate, null);
     },
 
@@ -43,6 +43,14 @@ module.exports = exports = React.createClass({
     render: function () {
 
         var requests = requestStore.getRequests(this.props.sessionId);
+        var titleByRequest;
+        if (requests.length > 0 && requests[0].cmd) {
+            titleByRequest = requests[0].cmd;
+        }
+        else if (requests.length > 1) {
+            titleByRequest = requests[1].cmd;
+        }
+        var title = this.state.title || titleByRequest || 'How can I help you?';
 
         var unselectedDom;
         if (!this.props.selected) {
@@ -59,10 +67,10 @@ module.exports = exports = React.createClass({
         }
 
         return (
-            <div className={styles.appcontainer} style={this.props.style}>
+            <div className={styles.appcontainer + ' ' + this.props.className} style={this.props.style}>
                 <a onClick={this.handleCloseClick} style={{float: 'right', marginLeft: '0.2em'}}><i className={"fa fa-2x fa-close " + styles.close}></i></a>
                 {unselectedDom}
-                <h3 style={{margin: '0', lineHeight: '40px'}}>{this.state.title || 'WebPrompt'}</h3>
+                <h3 style={{margin: '0', lineHeight: '40px'}}>{title}</h3>
 
                 {this.state.collapsed ? [] : requests.map(function (request) {
                     return (
@@ -73,3 +81,5 @@ module.exports = exports = React.createClass({
         );
     }
 });
+
+module.exports = Session;

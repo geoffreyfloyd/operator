@@ -1,6 +1,6 @@
 import React from 'react';
 
-module.exports = exports =  React.createClass({
+var Microphone = React.createClass({
     //mixins: [React.addons.PureRenderMixin],
     /*************************************************************
      * COMPONENT LIFECYCLE
@@ -202,3 +202,5 @@ module.exports = exports =  React.createClass({
         );
     },
 });
+
+module.exports = Microphone;

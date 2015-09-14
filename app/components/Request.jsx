@@ -3,7 +3,7 @@ import Requests from "../store-helpers/requests";
 import styles from "./Request.less";
 import $ from 'jquery/dist/jquery';
 
-module.exports = exports = React.createClass({
+var Request = React.createClass({
     /*************************************************************
      * COMPONENT LIFECYCLE
      *************************************************************/
@@ -60,9 +60,9 @@ module.exports = exports = React.createClass({
         }
         var response = [];
         var lines = data.response.result.split('\r\n');
-        lines.map(function (line) {
-            response.push(<span>{line}</span>);
-            response.push(<br />);
+        lines.map(function (line, index) {
+            response.push(<div key={index}><span>{line}</span></div>);
+            //response.push(<br />);
         }.bind(this));
         return response;
     },
@@ -143,3 +143,5 @@ module.exports = exports = React.createClass({
         );
     }
 });
+
+module.exports = Request;

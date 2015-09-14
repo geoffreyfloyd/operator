@@ -140,7 +140,7 @@ var f = {
             }
         }
 
-        f.send(repeatRequest.cmd, function (request) {
+        f.send(repeatRequest.cmd, repeatRequest.sessionId, function (request) {
             // notify subscribers
             f.notify(request);
         })

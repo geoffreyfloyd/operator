@@ -6,8 +6,9 @@ import Session from "./Session";
 import Prompt from "../components/Prompt";
 import requestStore from "../store-helpers/requests";
 import windowSizeStore from '../store-helpers/window-size-store';
+import styles from './WebPromptPage.less';
 
-module.exports = exports = React.createClass({
+var WebPromptPage = React.createClass({
     /*************************************************************
     * COMPONENT LIFECYCLE
     *************************************************************/
@@ -20,8 +21,8 @@ module.exports = exports = React.createClass({
         };
     },
 
-    componentWillMount: function () {
-        windowSizeStore.subscribe(this.handleWindowSizeChange);
+    componentDidMount: function () {
+        windowSizeStore.subscribe(this.handleStoreUpdate);
         requestStore.subscribe(this.handleStoreUpdate, null);
     },
 
@@ -29,14 +30,27 @@ module.exports = exports = React.createClass({
     * EVENT HANDLING
     *************************************************************/
     handleStoreUpdate: function () {
+        var selectedSessionId = this.state.selectedSessionId;
+        if (requestStore.getRequests(selectedSessionId).length === 0) {
+            var sessionIds = requestStore.getSessionIds();
+            if (sessionIds.length > 0) {
+                this.setState({
+                    ts: (new Date()).toISOString(),
+                    selectedSessionId: sessionIds[0]
+                });
+                return;
+            }
+        }
+
         this.setState({
             ts: (new Date()).toISOString()
         });
     },
     handleClickProcesses: function () {
-        this.setState({
+        var state = Object.assign({
             showProcesses: !this.state.showProcesses
-        });
+        }, this.calculateSize(!this.state.showProcesses));
+        this.setState(state);
     },
     handleClickNewSession: function () {
         requestStore.new();
@@ -46,14 +60,14 @@ module.exports = exports = React.createClass({
             selectedSessionId: sessionId
         });
     },
-    handleWindowSizeChange: function () {
 
+    calculateSize: function (showProcesses) {
         var size = windowSizeStore.updates.value;
-        
-        var sidePanelWidth = 400;
-        var workspaceHeight = size.height - 50;
 
-        if (requestStore.getSessionIds().length > 1) {
+        var sidePanelWidth = 400;
+        var workspaceHeight = size.height - 75;
+
+        if (requestStore.getSessionIds().length > 1 && showProcesses) {
             if (size.width < sidePanelWidth * 2) {
                 sidePanelWidth = size.width - sidePanelWidth;
             }
@@ -62,16 +76,17 @@ module.exports = exports = React.createClass({
             sidePanelWidth = 0;
         }
 
-        this.setState({
+        return {
             sidePanelWidth: sidePanelWidth,
+            workspaceWidth: size.width - sidePanelWidth,
             workspaceHeight: workspaceHeight
-        });
+        };
     },
 
     /*************************************************************
     * RENDERING
     *************************************************************/
-    renderMultiSession: function (sessionIds) {
+    renderMultiSession: function (sessionIds, size) {
 
         var selectedSessionId = this.state.selectedSessionId;
 
@@ -90,9 +105,9 @@ module.exports = exports = React.createClass({
         var sideSessions;
         if (this.state.showProcesses) {
             sideSessions = (
-                <div key="sideSessions" style={{ display: 'inline', width: String(this.state.sidePanelWidth) + 'px', margin: '0 10px 0 0'}}>
+                <div className={styles.scroll} key="sideSessions" style={{ height: size.workspaceHeight + 'px', overflowY: 'auto', width: String(size.sidePanelWidth) + 'px', margin: '0 10px 0 0'}}>
                     {otherSessionIds.map(function (sessionId) {
-                        return (<Session key={sessionId} sessionId={sessionId} style={{maxHeight: '600px'}} onSelect={this.handleSelectSession} />);
+                        return (<Session key={sessionId} sessionId={sessionId} className={styles.scroll} style={{maxHeight: '600px', overflowY: 'auto'}} onSelect={this.handleSelectSession} />);
                     }.bind(this))}
                 </div>
             );
@@ -105,28 +120,30 @@ module.exports = exports = React.createClass({
                     <Prompt sessionId={selectedSessionId} />
                 </Toolbar>
                 <div style={{display: 'flex'}}>
-                    <div key="mainworkspace" style={{flexGrow: '1', margin: '0 10px 0 10px'}} >
+                    <div className={styles.scroll} key="mainworkspace" style={{ flexGrow: '1', margin: '0 10px', maxWidth: String(size.workspaceWidth) + 'px', height: size.workspaceHeight + 'px', overflowY: 'auto' }} >
                         <Session sessionId={selectedSessionId} selected={true} />
                     </div>
-                    <div style={{ width: '10px'}} />
+
                     {sideSessions}
                 </div>
             </div>
         );
     },
-    renderSingleSession: function (sessionId) {
+    renderSingleSession: function (sessionId, size) {
         return (
             <div>
-                <Toolbar key="toolbar" showProcesses={this.state.showProcesses} onClickProcesses={this.handleClickProcesses} onClickNewSession={this.handleClickNewSession}>
+                <Toolbar key="toolbar" showProcesses={false} onClickProcesses={this.handleClickProcesses} onClickNewSession={this.handleClickNewSession}>
                     <Prompt sessionId={sessionId} />
                 </Toolbar>
-                <div key="mainworkspace">
+                <div className={styles.scroll} key="mainworkspace" style={{ margin: '0 10px 10px', height: size.workspaceHeight + 'px', overflowY: 'auto'}}>
                     <Session sessionId={sessionId} selected={true} />
                 </div>
             </div>
         );
     },
     render: function () {
+
+        var size = this.calculateSize(this.state.showProcesses);
 
         var sessionIds = requestStore.getSessionIds();
 
@@ -144,11 +161,13 @@ module.exports = exports = React.createClass({
             return null;
         }
         else if (sessionIds.length === 1) {
-            return this.renderSingleSession(sessionIds[0]);
+            return this.renderSingleSession(sessionIds[0], size);
         }
         else {
-            return this.renderMultiSession(sessionIds);
+            return this.renderMultiSession(sessionIds, size);
         }
 
     }
 });
+
+module.exports = WebPromptPage;

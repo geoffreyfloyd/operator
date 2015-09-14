@@ -5,7 +5,7 @@ import requestStore from "../store-helpers/requests";
 import Microphone from './Microphone';
 import styles from "./Prompt.less";
 
-module.exports = exports = React.createClass({
+var Prompt = React.createClass({
     /*************************************************************
      * COMPONENT LIFECYCLE
      *************************************************************/
@@ -64,3 +64,5 @@ module.exports = exports = React.createClass({
         );
     }
 });
+
+module.exports = Prompt;
