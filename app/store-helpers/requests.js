@@ -10,7 +10,7 @@ var api = {
     sendRequest: function (request, callback) {
         $.ajax({
             context: this,
-            url: 'http://localhost:8080/_/cmd/',
+            url: 'http://' + window.location.href.split('/').slice(2,3).join('/') + '/_/cmd/',
             type: 'POST',
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(request),

@@ -1,9 +1,20 @@
-'use strict';
-
-import React from "react";
+import React from 'react';
 import styles from './Toolbar.less';
 
 var Toolbar = React.createClass({
+    /*************************************************************
+     * DEFINITIONS
+     *************************************************************/
+    propTypes: {
+        children: React.PropTypes.object,
+        onClickNewSession: React.PropTypes.func,
+        onClickProcesses: React.PropTypes.func,
+        showProcesses: React.PropTypes.bool
+    },
+
+    /*************************************************************
+    * RENDERING
+    *************************************************************/
     render: function () {
         return (
             <div className={styles.container}>

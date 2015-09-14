@@ -1,3 +1,3 @@
-import WebPromptPage from "containers/WebPromptPage";
+import WebPromptPage from 'containers/WebPromptPage';
 
 export default WebPromptPage;

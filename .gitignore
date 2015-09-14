@@ -1,2 +1,5 @@
 /node_modules
 /build
+*.log
+.vscode
+operator.config.js
