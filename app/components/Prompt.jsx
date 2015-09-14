@@ -57,9 +57,9 @@ var Prompt = React.createClass({
         //TODO: Tab suggest autocompletion and up / down request history
         return (
             <div className={styles.inputcontainer}>
-                <i className="fa fa-2x fa-chevron-right"></i>
-                <input ref="cmd" id="cmd" type="text" className={styles.input} onChange={this.handleInputChange} value={this.state.request} />
+                <i className="fa fa-2x fa-chevron-right" title="webprompt> command the web"></i>
                 <Microphone handleSpeechResult={this.handleSendRequest} />
+                <input ref="cmd" id="cmd" type="text" className={styles.input} onChange={this.handleInputChange} value={this.state.request} />
             </div>
         );
     }

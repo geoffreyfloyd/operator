@@ -192,7 +192,7 @@ var Microphone = React.createClass({
         };
 
         return (
-            <div style={this.props.style}>
+            <div style={this.props.style} title="Use microphone to send command">
                 <a style={listItemContentStyle}
                         href="javascript:;"
                         onClick={this.handleSpeakReadyClick}>

@@ -1,8 +1,23 @@
-# geoffreyfloyd/webprompt
+# webprompt> command the web
 
-Starter template for react and webpack.
+An experimental project to re-imagine the command prompt in a connected and media-rich world.
 
-## Features
+## Available Commands
+
+* wiki
+* hello
+* remind
+* count
+
+## In The Works
+
+* triggers - run a command when trigger evaluates to true (ie. sendemail when new craigslist item is available or when amazon price decreases)
+* social - post quick updates to your facebook and twitter accounts
+* gui processes - self-contained React apps hosted in browser
+
+## Development
+
+### Features
 
 * Compilation with webpack
 * React and jsx
@@ -23,7 +38,8 @@ Starter template for react and webpack.
 * Also supports coffee-script files if you are more a coffee-script person.
 * You can also require markdown or text files for your content.
 
-## Local Installation
+
+### Local Installation
 
 Install [node.js](https://nodejs.org) or [io.js](https://iojs.org)
 
@@ -33,7 +49,8 @@ Just clone this repo and change the `origin` git remote.
 npm install
 ```
 
-## Development server
+
+### Development server
 
 ``` text
 # start the webpack-dev-server
@@ -55,7 +72,7 @@ It automatically recompiles and refreshes the page when files are changed.
 Also check the [webpack-dev-server documentation](http://webpack.github.io/docs/webpack-dev-server.html).
 
 
-## Hot Module Replacement development server
+###  Hot Module Replacement development server
 
 ``` text
 # start the webpack-dev-server in HMR mode
@@ -77,7 +94,7 @@ It automatically recompiles when files are changed. When a hot-replacement-enabl
 Hot Module Replacement has a performance impact on compilation.
 
 
-## Production compilation and server
+###  Production compilation and server
 
 ``` text
 # build the client bundle and the prerendering bundle
@@ -97,24 +114,24 @@ The server is at `lib/server.js`
 The production setting builds two configurations: one for the client (`build/public`) and one for the serverside prerendering (`build/prerender`).
 
 
-## Legacy static assets
+###  Legacy static assets
 
 Assets in `public` are also served.
 
 
-## Build visualization
+###  Build visualization
 
 After a production build you may want to visualize your modules and chunks tree.
 
 Use the [analyse tool](http://webpack.github.io/analyse/) with the file at `build/stats.json`.
 
 
-## Loaders and file types
+###  Loaders and file types
 
 Many file types are preconfigured, but not every loader is installed. If you get an error like `Cannot find module "xxx-loader"`, you'll need to install the loader with `npm install xxx-loader --save` and restart the compilation.
 
 
-## Common changes to the configuration
+###  Common changes to the configuration
 
 ### Add more entry points
 
