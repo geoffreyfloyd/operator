@@ -7,7 +7,9 @@ module.exports = [
 		// devtool: "source-map"
 	}),
 	require("./make-webpack-config")({
-		prerender: true,
+	    // prerender: true,
+	    devServer: true,
+	    hotComponents: true,
 		minimize: true
 	})
 ];
