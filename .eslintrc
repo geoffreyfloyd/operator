@@ -29,6 +29,8 @@ templateStrings: true
 
 rules:
   # ERRORS
+  one-var: [2, { uninitialized: "always", initialized: "never" }]
+
   brace-style: [1, stroustrup, allowSingleLine: true]
   camelcase: [1, properties: always]
   comma-style: [1, last]
@@ -101,7 +103,6 @@ rules:
   no-unused-vars: [1, {vars: all, args: after-used}]
   no-void: 1
   no-with: 1
-  one-var: [1, never]
   operator-assignment: [1, always]
   quote-props: [1, as-needed]
   quotes: [1, single]
@@ -121,10 +122,12 @@ rules:
 
   # WARNINGS
   guard-for-in: 1
-  max-len: [1, 80, 4, ignorePattern: "^(\\s*var\\s.+=\\s*require\\s*\\(|import )"]
   no-undef: 1
   no-script-url: 1
   spaced-comment: [1, always, { "exceptions": ["*"] }]
+
+  # TEMP DISABLED
+  max-len: [0, 80, 4, ignorePattern: "^(\\s*var\\s.+=\\s*require\\s*\\(|import )"]
 
   # DISABLED
   block-scoped-var: 0

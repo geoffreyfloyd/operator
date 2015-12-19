@@ -1,5 +1,3 @@
-'use strict';
-
 import React from 'react';
 import styles from './Calc.less';
 
@@ -17,7 +15,9 @@ var Calc = React.createClass({
             result = '';
         }
         else if (input === '=') {
+            /* eslint-disable no-eval */
             result = String(eval(result));
+            /* eslint-enable no-eval */
         }
         else {
             if (result === '0') {

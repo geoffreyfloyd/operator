@@ -1,10 +1,8 @@
-'use strict';
-
-import React from "react";
-import Toolbar from "../components/Toolbar";
-import Session from "./Session";
-import Prompt from "../components/Prompt";
-import requestStore from "../store-helpers/requests";
+import React from 'react';
+import Toolbar from '../components/Toolbar';
+import Session from './Session';
+import Prompt from '../components/Prompt';
+import requestStore from '../store-helpers/requests';
 import windowSizeStore from '../store-helpers/window-size-store';
 import styles from './WebPromptPage.less';
 

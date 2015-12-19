@@ -1,1 +1,3 @@
-module.exports = require('react-pong');
+import Pong from 'react-pong';
+
+export default Pong;

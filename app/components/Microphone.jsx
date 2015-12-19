@@ -1,7 +1,17 @@
+/* globals webkitSpeechRecognition */
 import React from 'react';
 
 var Microphone = React.createClass({
-    //mixins: [React.addons.PureRenderMixin],
+    /*************************************************************
+     * DEFINITIONS
+     *************************************************************/
+    // mixins: [React.addons.PureRenderMixin],
+    propTypes: {
+        handleSpeechResult: React.PropTypes.func,
+        focusTag: React.PropTypes.string,
+        style: React.PropTypes.object
+    },
+
     /*************************************************************
      * COMPONENT LIFECYCLE
      *************************************************************/
@@ -12,7 +22,7 @@ var Microphone = React.createClass({
     },
 
     componentDidMount: function () {
-        if (typeof webkitSpeechRecognition !== 'undefined') {
+        if (webkitSpeechRecognition !== undefined) {
             var recognition = this.recognition = new webkitSpeechRecognition();
             recognition.continuous = false;
             recognition.interimResults = false;
@@ -37,11 +47,7 @@ var Microphone = React.createClass({
     },
 
     handleSpeech: function (event) {
-        var context,
-            existingAction,
-            newAction,
-            speech,
-            spokenArgs;
+        var speech;
 
         if (event.results.length > 0) {
             speech = event.results[0][0].transcript.trim().toLowerCase();
@@ -59,128 +65,10 @@ var Microphone = React.createClass({
     },
 
     /*************************************************************
-     * HELPERS
-     *************************************************************/
-    createActionObjectLiteral: function (actionName, created) {
-        // Use IIFE for lexical scope
-        var newAction,
-            tags;
-
-        /**
-         * Get current focus and filter tags
-         */
-        tags = ui.tags || [];
-        tags = tags.slice();
-        tags.push(this.props.focusTag);
-
-        /**
-         * Create new action {} object literal
-         */
-        newAction = doozy.action(actionName, tags);
-        newAction.created = created;
-    },
-
-    parseSpeech: function (speech, context) {
-        var actionIndex = 0,
-            actionName,
-            commandArgs,
-            commandWord,
-            date,
-            dateSignal = false,
-            duration,
-            durationSignal = false,
-            parseDuration;
-
-        if (context === 'new-action') {
-            contextWord = 'will';
-        } else if (context === 'log-action') {
-            contextWord = 'did';
-        }
-
-        /**
-         * Check for a language signal that a date is referenced
-         */
-        if (speech.indexOf(' i ' + contextWord + ' ') > -1) {
-            dateSignal = true;
-            speech = speech.replace(' i ' + contextWord + ' ', '|');
-        }
-
-        /**
-         * Check for a language signal that a duration is referenced
-         */
-        if (speech.indexOf(' for ') > -1) {
-            durationSignal = true;
-            speech = speech.replace(' for ', '|');
-        }
-
-        /**
-         * Remove 'excess' language for clean split of command arguments
-         */
-        if (speech.slice(0, (3 + contextWord.length)) === 'i ' + contextWord + ' ') {
-            speech = speech.replace('i ' + contextWord + ' ', '');
-        }
-
-        /**
-         * Split command arguments
-         */
-        commandArgs = speech.split('|');
-
-        /**
-         * Parse date argument if supplied, else today
-         */
-        date = Date.create('today');
-        if (dateSignal) {
-            date = Date.create(commandArgs[0]);
-            if (isNaN(date.getTime())) {
-                console.log('Bad Date Argument: ' + commandArgs[0]);
-                date = Date.create('today');
-            }
-        }
-
-        /**
-         * Parse duration argument if supplied, else 0
-         */
-        duration = 0;
-        if (durationSignal) {
-            parseDuration = babble.get('durations')
-                .translate(commandArgs[commandArgs.length - 1]);
-
-            if (parseDuration.tokens.length > 0) {
-                duration = parseDuration.tokens[0].value.toMinutes();
-            }
-        }
-
-        /**
-         * Determine the arg index that contains the name of the action
-         */
-        if (commandArgs.length === 3) {
-            actionIndex = 1;
-        } else if (commandArgs.length === 2 && dateSignal) {
-            actionIndex = 1;
-        } else if  (commandArgs.length === 2 && durationSignal) {
-            actionIndex = 0;
-        }
-
-        /**
-         * Build a clean action name (begin with uppercase)
-         */
-        actionName = commandArgs[actionIndex].slice(0,1).toUpperCase() + commandArgs[actionIndex].slice(1);
-
-        /**
-         * Return an object literal of parsed arguments
-         */
-        return {
-            actionName: actionName,
-            date: date,
-            duration: duration
-        };
-    },
-
-    /*************************************************************
      * RENDERING
      *************************************************************/
     render: function () {
-        if (typeof webkitSpeechRecognition === 'undefined') {
+        if (webkitSpeechRecognition === undefined) {
             return null;
         }
 
@@ -190,7 +78,7 @@ var Microphone = React.createClass({
             padding: '5px',
             textAlign: 'center'
         };
-
+        /* eslint-disable no-script-url */
         return (
             <div style={this.props.style} title="Use microphone to send command">
                 <a style={listItemContentStyle}
@@ -200,6 +88,7 @@ var Microphone = React.createClass({
                 </a>
             </div>
         );
+        /* eslint-enable no-script-url */
     },
 });
 

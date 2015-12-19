@@ -1,34 +1,37 @@
 import React from 'react';
-import Requests from "../store-helpers/requests";
-import styles from "./Request.less";
-import $ from 'jquery/dist/jquery';
+import Requests from '../store-helpers/requests';
+import styles from './Request.less';
 import GooeyHost from '../gooeys/GooeyHost';
 
 var Request = React.createClass({
     /*************************************************************
+     * DEFINITIONS
+     *************************************************************/
+    propTypes: {
+        data: React.PropTypes.object,
+    },
+    getInitialState: function () {
+        return this.props.data;
+    },
+
+    /*************************************************************
      * COMPONENT LIFECYCLE
      *************************************************************/
-     getInitialState: function () {
-        return this.props.data;
-     },
-
-     componentDidMount: function () {
+    componentDidMount: function () {
         Requests.subscribe(this.handleStoreUpdate, this.props.data.id);
-     },
-
-     componentWillUpdate: function() {
-         if (this.refs.responseContainer) {
-             var node = this.refs.responseContainer.getDOMNode();
-             this.shouldScrollBottom = node.scrollTop + node.offsetHeight === node.scrollHeight;
-         }
-     },
-
-     componentDidUpdate: function() {
-         if (this.shouldScrollBottom) {
-             var node = this.refs.responseContainer.getDOMNode();
-             node.scrollTop = node.scrollHeight
-         }
-     },
+    },
+    componentWillUpdate: function () {
+        if (this.refs.responseContainer) {
+            var node = this.refs.responseContainer.getDOMNode();
+            this.shouldScrollBottom = node.scrollTop + node.offsetHeight === node.scrollHeight;
+        }
+    },
+    componentDidUpdate: function () {
+        if (this.shouldScrollBottom) {
+            var node = this.refs.responseContainer.getDOMNode();
+            node.scrollTop = node.scrollHeight;
+        }
+    },
 
     /*************************************************************
      * EVENT HANDLING
@@ -53,6 +56,7 @@ var Request = React.createClass({
             requestHovering: hovering
         });
     },
+
     /*************************************************************
     * RENDERING
     *************************************************************/
@@ -65,8 +69,8 @@ var Request = React.createClass({
         var lines = data.response.result.split('\r\n');
         lines.map(function (line, index) {
             response.push(<div key={index}><span>{line}</span></div>);
-            //response.push(<br />);
-        }.bind(this));
+            // response.push(<br />);
+        });
         return response;
     },
     renderHtmlResponse: function () {
@@ -76,7 +80,7 @@ var Request = React.createClass({
         }
         var html = data.response.result;
 
-        return <span dangerouslySetInnerHTML={{__html: html}}></span>;
+        return (<span dangerouslySetInnerHTML={{__html: html}}></span>);
     },
     renderJsonResponse: function () {
         var data = this.props.data;
@@ -99,9 +103,10 @@ var Request = React.createClass({
         if (!data.response.result) {
             return null;
         }
-        return <GooeyHost gooey={data.response.result} />
+        return (<GooeyHost gooey={data.response.result} />);
     },
     render: function () {
+        var cmd, response;
         var data = this.props.data;
 
         /**
@@ -121,21 +126,20 @@ var Request = React.createClass({
             statusStyle = styles.err;
         }
 
-        var cmd;
-        var response;
-
-
         /**
          * Response media
          */
         if (data.response) {
             if (data.response.type === 'text') {
                 response = this.renderTextResponse();
-            } else if (data.response.type === 'json') {
+            }
+            else if (data.response.type === 'json') {
                 response = this.renderJsonResponse();
-            } else if (data.response.type === 'html') {
+            }
+            else if (data.response.type === 'html') {
                 response = this.renderHtmlResponse();
-            } else if (data.response.type === 'gooey') {
+            }
+            else if (data.response.type === 'gooey') {
                 response = this.renderGooeyResponse();
             }
         }

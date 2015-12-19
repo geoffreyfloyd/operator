@@ -1,45 +1,49 @@
-'use strict';
-
-import React from "react";
-import requestStore from "../store-helpers/requests";
+import React from 'react';
+import requestStore from '../store-helpers/requests';
 import Microphone from './Microphone';
-import styles from "./Prompt.less";
+import styles from './Prompt.less';
 
 var Prompt = React.createClass({
     /*************************************************************
-     * COMPONENT LIFECYCLE
+     * DEFINITIONS
      *************************************************************/
+    propTypes: {
+        sessionId: React.PropTypes.string
+    },
     getInitialState: function () {
         return {
             ts: (new Date()).toISOString()
         };
     },
 
-    componentDidMount: function() {
+    /*************************************************************
+     * COMPONENT LIFECYCLE
+     *************************************************************/
+    componentDidMount: function () {
         document.addEventListener('keydown', this.handleKeyDown);
     },
 
-    componentWillUnMount: function() {
+    componentWillUnMount: function () {
         document.removeEventListener('keydown', this.handleKeyDown);
     },
 
     /*************************************************************
-    * EVENT HANDLING
-    *************************************************************/
+     * EVENT HANDLING
+     *************************************************************/
     handleInputChange: function (e) {
         this.setState({
             request: e.target.value
         });
     },
-    handleKeyDown: function(e) {
+    handleKeyDown: function (e) {
         var keyEnter = 13;
-        if (e.keyCode == keyEnter) {
+        if (e.keyCode === keyEnter) {
             this.handleSendRequest();
         }
     },
     handleSendRequest: function (request) {
         // get request text
-        request = request || this.state.request;
+        request = request || this.state.request; // eslint-disable-line no-param-reassign
 
         // send request
         requestStore.send(request, this.props.sessionId, this.handleResponseReady);
@@ -51,10 +55,10 @@ var Prompt = React.createClass({
     },
 
     /*************************************************************
-    * RENDERING
-    *************************************************************/
+     * RENDERING
+     *************************************************************/
     render: function () {
-        //TODO: Tab suggest autocompletion and up / down request history
+        // TODO: Tab suggest autocompletion and up / down request history
         return (
             <div className={styles.inputcontainer}>
                 <i className="fa fa-2x fa-chevron-right" title="webprompt> command the web"></i>

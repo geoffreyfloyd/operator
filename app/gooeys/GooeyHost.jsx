@@ -1,18 +1,31 @@
-'use strict';
-
 import React from 'react';
 
 var GooeyHost = React.createClass({
     /*************************************************************
-    * RENDERING
-    *************************************************************/
+     * DEFINITIONS
+     *************************************************************/
+    propTypes: {
+        gooey: React.PropTypes.string,
+    },
     Gooey: null,
 
+    /*************************************************************
+    * COMPONENT LIFECYCLE
+    *************************************************************/
     componentWillMount: function () {
         if (!this.Gooey && this.props.gooey) {
-            require.ensure([], function () { // this syntax is weird but it works
+            // Dynamically require a gooey component
+            // This syntax is weird but it works
+            require.ensure([], function () {
+                // Build require string
                 var req = './' + this.props.gooey;
-                this.Gooey = require(req); // when this function is called, the module is guaranteed to be synchronously available.
+
+                // when this function is called
+                // the module is guaranteed to be synchronously available.
+                this.Gooey = require(req);
+
+                // Set state to notify GooeyHost component
+                // that we have the requested Gooey component
                 this.setState({
                     isReady: true
                 });
@@ -20,6 +33,9 @@ var GooeyHost = React.createClass({
         }
     },
 
+    /*************************************************************
+    * RENDERING
+    *************************************************************/
     render: function () {
 
         if (!this.Gooey) {
@@ -34,4 +50,4 @@ var GooeyHost = React.createClass({
     }
 });
 
-module.exports = GooeyHost;
+export default GooeyHost;

@@ -1,5 +1,5 @@
-import React from "react";
-import styles from "./TEMPLATE.css";
+import React from 'react';
+import styles from './TEMPLATE.css';
 
 export default class TEMPLATE extends React.Component {
 	static getProps(stores, params) {
