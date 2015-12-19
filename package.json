@@ -11,7 +11,7 @@
     "build-nwjs": "webpack --config webpack-node-webkit.config.js --progress --profile --colors",
     "start-dev": "node lib/server-development",
     "start": "node lib/server-production",
-    "prod-server": "webpack-dev-server --config webpack-dev-server.config.js --progress --colors --port 2992 --inline"
+    "prod-server": "webpack-dev-server --config webpack-production.config.js --progress --colors --inline"
   },
   "keywords": [
     "cmd",

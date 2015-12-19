@@ -8,7 +8,7 @@ module.exports = [
 	}),
 	require("./make-webpack-config")({
 	    // prerender: true,
-	    devServer: true,
+	    // devServer: true,
 	    hotComponents: true,
 		minimize: true
 	})
