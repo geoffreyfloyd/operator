@@ -63,7 +63,7 @@ var Prompt = React.createClass({
             <div className={styles.inputcontainer}>
                 <i className="fa fa-2x fa-chevron-right" title="webprompt> command the web"></i>
                 <Microphone handleSpeechResult={this.handleSendRequest} />
-                <input ref="cmd" id="cmd" type="text" className={styles.input} onChange={this.handleInputChange} value={this.state.request} />
+                <input ref="cmd" id="cmd" type="text" className={styles.input} placeholder="How can i help you?" onChange={this.handleInputChange} value={this.state.request} />
             </div>
         );
     }
