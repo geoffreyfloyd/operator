@@ -51,7 +51,15 @@ Install [node.js](https://nodejs.org) or [io.js](https://iojs.org)
 Just clone this repo and change the `origin` git remote.
 
 ``` text
-npm install
+sudo npm install -g webpack
+sudo npm install -g node-gyp
+sudo apt-get install libssl-dev
+sudo npm install
+
+if (nodegit fails to build) {
+	sudo ./node_modules/nodegit/vendor/libssh2/configure
+	sudo npm run rebuild
+}
 ```
 
 
