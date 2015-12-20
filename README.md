@@ -56,6 +56,10 @@ sudo npm install -g node-gyp
 sudo apt-get install libssl-dev
 sudo npm install
 
+npm link babble
+npm link hooman
+npm link gnodes
+
 if (nodegit fails to build) {
 	sudo ./node_modules/nodegit/vendor/libssh2/configure
 	sudo npm run rebuild
