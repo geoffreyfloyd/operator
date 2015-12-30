@@ -1,7 +1,7 @@
 {
-  "name": "webprompt",
-  "version": "0.0.0",
-  "description": "",
+  "name": "operator",
+  "version": "0.0.1",
+  "description": "context-aware web app routing, notifications, and cross communication for interfaces and commands.",
   "main": "app/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
