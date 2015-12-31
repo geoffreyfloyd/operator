@@ -17,11 +17,7 @@ module.exports = function(operator) {
             }
         },
         command: function (seconds, bridge) {
-            
-            //var done = new Date();
-            //done.setSeconds(done.getSeconds() + seconds);
             var processId = operator.newId();
-
             setTimeout(nextCount.bind(null, seconds, processId, 0), 1000);
             bridge.done('text', 'OK!', { processId: processId });
         }
