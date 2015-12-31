@@ -1,48 +1,56 @@
-var uuid = require('uuid');
-var ajax = require('request');
-var socketServer = require('./socket-server');
 var hooman = require('hooman');
 var createCommandInterface = hooman.createCommandInterface;
 var tokenize = hooman.tokenize;
 
-module.exports = function(app) {
-
-	// REST APIs
-	// Note that there is no security in this example
-	// Make sure your production server handles requests better!
-	var getFunResponse = function (cmd) {
-		cmd = cmd.toLowerCase();
-
-		var greeting = /h[ae]llo|hi|hey|howdy/i;
-		if (greeting.test(cmd)) {
-			return {
-				status: 'OK',
-				date: (new Date()).toISOString(),
-				type: 'text',
-				result: 'Hi, how can i help you?'
-			};
-		}
-
-		greeting = /^what\'s up/i;
-		if (greeting.test(cmd)) {
-			return {
-				status: 'OK',
-				date: (new Date()).toISOString(),
-				type: 'text',
-				result: 'Just byting into life one chunk at a time.'
-			};
-		}
-
-		return null;
-	};
-
-
-
+module.exports = function(operator) {
+    
+    var hello = createCommandInterface({
+        interpreter: function (cmd, tokens, bridge) {
+            var pattern = /h[ae]llo|hi|hey|howdy/i;
+            if (pattern.test(cmd)) {
+                return {
+                    cmd: this.interpret.translate,
+                    args: [bridge],
+                    certainty: 1.0,
+                    request: null
+                };
+            }
+            else {
+                return false
+            }
+        },
+        command: function (bridge) {
+            bridge.done('text', 'Hi, how can i help you?');
+        }
+    });
+    
+    var whatsUp = createCommandInterface({
+        interpreter: function (cmd, tokens, bridge) {
+            var pattern = /(what|wut)[s]? up/i;
+            if (pattern.test(cmd.replace(/'/, ''))) {
+                return {
+                    cmd: this.interpret.translate,
+                    args: [bridge],
+                    certainty: 1.0,
+                    request: null
+                };
+            }
+            else {
+                return false
+            }
+        },
+        command: function (bridge) {
+            bridge.done('text', 'Just byting into life one chunk at a time.');
+        }
+    });
+    
+    operator.registerCommand(hello);
+    operator.registerCommand(whatsUp);
 
     /**
      * Handle a request from the client web prompt
      */
-	app.post('/_/cmd/*', function(req, res) {
+	operator.express.post('/_/cmd/*', function(req, res) {
 	    /**
          * Set header to tell client that we're
          * sending json data in our response body
@@ -53,14 +61,14 @@ module.exports = function(app) {
 		var cmd = req.body.cmd;
 		var tokens = tokenize(cmd);
 		var interpreterResponses = [];
-		var operator = new OperatorBridge(res);
+		var bridge = operator.createBridge(req, res);
 
 	    /**
          * Let all interpreters decide if they recognize this command
          * and add all interested responses to array
          */
-		commands.forEach(function (command) {
-		    var interpreterResponse = command.interpret(cmd, tokens, operator); 
+		operator.commands.forEach(function (command) {
+		    var interpreterResponse = command.interpret(cmd, tokens, bridge); 
 		    if (interpreterResponse) {
 		        interpreterResponses.push(interpreterResponse)
 		    }
@@ -70,7 +78,7 @@ module.exports = function(app) {
 		    /**
              * None of the command interpretors recognized this command
              */
-		    operator.fail('Pardon? My apologies, but i do not understand.');
+		    bridge.fail('Pardon? My apologies, but i do not understand.');
 		}
 		else if (interpreterResponses.length === 1 && interpreterResponses[0].certainty === 1.0) {
 		    /**
