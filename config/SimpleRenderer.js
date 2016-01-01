@@ -6,17 +6,12 @@ function SimpleRenderer(options) {
     this.html = html.replace('SCRIPT_URL', options.scriptUrl);
 }
 
-SimpleRenderer.prototype.setScriptUrl = function (scriptUrl) {
-    this.html = html.replace('SCRIPT_URL', scriptUrl);
-};
-
 SimpleRenderer.prototype.render = function (_path, _readItems, callback) {
     callback(null, this.html);
 };
 
-SimpleRenderer.prototype.renderWithScript = function (scriptUrl, _path, _readItems, callback) {
-    var otfHtml = html.replace('SCRIPT_URL', scriptUrl);
-    callback(null, otfHtml);
+SimpleRenderer.prototype.renderHtml = function (html, _path, _readItems, callback) {
+    callback(null, html);
 };
 
 module.exports = SimpleRenderer;
