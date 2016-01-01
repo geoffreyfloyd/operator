@@ -1,6 +1,6 @@
 ﻿var hooman = require('hooman');
 var createCommandInterface = hooman.createCommandInterface;
-var those = require('../lib/those');
+var those = require('hl-common-js/src/those');
 
 module.exports = function(operator) {
             
