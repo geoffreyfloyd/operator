@@ -5,7 +5,7 @@ import withTimeout from './withTimeout';
 import ReactUpdates from 'react/lib/ReactUpdates';
 import StoresWrapper from './StoresWrapper';
 
-export default function renderApplication(routes, stores, options) {
+export default function renderApplication (routes, stores, options) {
     var timeout = options.timeout || 600;
 
     var initialRun = true;

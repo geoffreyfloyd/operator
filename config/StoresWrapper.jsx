@@ -1,13 +1,13 @@
 import React from 'react';
 
 export default class StoresWrapper {
-    getChildContext() {
+    getChildContext () {
         return {
             stores: this.props.stores
         };
     }
 
-    render() {
+    render () {
         var Application = this.props.Component;
         return (<Application />);
     }
