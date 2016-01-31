@@ -89,4 +89,27 @@ module.exports = function(operator) {
     operator.registerCommand(addNode);
     operator.registerCommand(nodes);
 
+    /**
+     * Set header to tell client that we're
+     * sending json data in our response body
+     */
+    function jsonResponse (req, res, next) {
+        res.setHeader('Content-Type', 'application/json');
+        next();
+    }
+    
+    // URL to retag any gnode
+    operator.express.get('/gnodes/api/move/:src/:dest', operator.authenticate, jsonResponse, function (req, res) {
+        operator.getDb(function (db) {
+            var error;
+            try {
+                db.move(req.params.src, req.params.dest);
+                db.commitChanges();
+            }
+            catch (e) {
+                error = e;
+            }
+            res.end(JSON.stringify({ error: error}));
+        });
+    });
 };
